@@ -77,7 +77,7 @@ namespace Swagger.ObjectModel.Builders
                 }
                 else
                 {
-                    schema.Ref = schema.Ref ?? "#/definitions/" + modelType.Name;
+                    schema.Ref = schema.Ref ?? "#/definitions/" + SwaggerBuilderConfig.ModelIdConvention(modelType);
                 }
                 return schema;
             }

@@ -55,6 +55,7 @@
     <Compile Include="Attributes\DatatypeAttribute.cs" />
     <Compile Include="Attributes\ModelAttribute.cs" />
     <Compile Include="Attributes\ModelPropertyAttribute.cs" />
+    <Compile Include="Attributes\ModuleAttribute.cs" />
     <Compile Include="Attributes\RouteAttribute.cs" />
     <Compile Include="Attributes\RouteParamAttribute.cs" />
     <Compile Include="Attributes\Response.cs" />

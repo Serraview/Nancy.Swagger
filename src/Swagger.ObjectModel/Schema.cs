@@ -1,4 +1,7 @@
-﻿namespace Swagger.ObjectModel
+﻿using System;
+using Swagger.ObjectModel.Builders;
+
+namespace Swagger.ObjectModel
 {
     using System.Collections.Generic;
 
@@ -60,6 +63,5 @@
         /// </summary>
         [SwaggerProperty("description")]
         public string Description { get; set; }
-
     }
 }

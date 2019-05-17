@@ -1,7 +1,9 @@
-﻿using Should;
+﻿using System.Collections.Generic;
+using Should;
 using Swagger.ObjectModel;
 
 using System.Linq;
+using Swagger.ObjectModel.Builders;
 using Xunit;
 using Xunit.Extensions;
 
@@ -18,7 +20,7 @@ namespace Nancy.Swagger.Tests
             }.ToModelProperty().ShouldEqual(
                 new ModelProperty
                 {
-                    Ref = SwaggerConfig.ModelIdConvention(typeof(TestModel))
+                    Ref = SwaggerBuilderConfig.ModelIdConvention(typeof(TestModel))
                 }
             );
         }
@@ -53,6 +55,50 @@ namespace Nancy.Swagger.Tests
         }
 
         [Fact]
+        public void ToModelProperty_NestedPrimitiveCollection_ShouldHaveTypeArrayAndItemsTypeArray()
+        {
+            new SwaggerModelPropertyData
+            {
+                Type = typeof(string[][])
+            }.ToModelProperty().ShouldEqual(
+                new ModelProperty
+                {
+                    Type = "array",
+                    Items = new Item
+                    {
+                        Type = "array",
+                        Items = new Item
+                        {
+                            Type = "string"
+                        }
+                    }
+                }
+            );
+        }
+
+        [Fact]
+        public void ToModelProperty_NestedNonPrimitiveCollection_ShouldHaveTypeArrayAndItemsTypeArray()
+        {
+            new SwaggerModelPropertyData
+            {
+                Type = typeof(List<List<string>>)
+            }.ToModelProperty().ShouldEqual(
+                new ModelProperty
+                {
+                    Type = "array",
+                    Items = new Item
+                    {
+                        Type = "array",
+                        Items = new Item
+                        {
+                            Type = "string"
+                        }
+                    }
+                }
+            );
+        }
+
+        [Fact]
         public void ToModelPropertyNonPrimitiveCollection_ShouldHaveTypeArrayAndItemsRefSet()
         {
             new SwaggerModelPropertyData
@@ -62,7 +108,7 @@ namespace Nancy.Swagger.Tests
                 new ModelProperty
                 {
                     Type = "array",
-                    Items = new Item { Ref = SwaggerConfig.ModelIdConvention(typeof(TestModel)) }
+                    Items = new Item { Ref = SwaggerBuilderConfig.ModelIdConvention(typeof(TestModel)) }
                 },
                 "String return type"
             );

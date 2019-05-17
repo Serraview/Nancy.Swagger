@@ -61,19 +61,12 @@ namespace Nancy.Swagger.Services
             {
                 builder.Path(pathItem.Key, pathItem.Value.PathItem);
             }
-
-            //foreach (var model in this.RetrieveSwaggerModels())
-            //{
-            //    builder.Definition(model.ModelType.Name, model.);
-            //}
-
+            
             builder.Info(_info);
             
             foreach (var model in RetrieveSwaggerModels())
             {
-                Type t = GetType(model.ModelType);
-                String name = model.ModelType.Name;
-                if (t != model.ModelType) name = t.Name + "[]";
+                var name = SwaggerBuilderConfig.ModelIdConvention(model.ModelType);
                 builder.Definition(name, model.GetSchema());
             }
 

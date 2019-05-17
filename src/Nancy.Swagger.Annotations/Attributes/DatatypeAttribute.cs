@@ -44,22 +44,22 @@ namespace Nancy.Swagger.Annotations.Attributes
             set { _uniqueItems = value; }
         }
 
-        internal long? GetNullableMaximum()
+        public long? GetNullableMaximum()
         {
             return _maximum;
         }
 
-        internal long? GetNullableMinimum()
+        public long? GetNullableMinimum()
         {
             return _minium;
         }
 
-        internal bool? GetNullableRequired()
+        public bool? GetNullableRequired()
         {
             return _required;
         }
 
-        internal bool? GetNullableUniqueItems()
+        public bool? GetNullableUniqueItems()
         {
             return _uniqueItems;
         }

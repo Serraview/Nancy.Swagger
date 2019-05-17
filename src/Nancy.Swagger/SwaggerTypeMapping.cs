@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Nancy.Swagger
 {
@@ -9,50 +8,42 @@ namespace Nancy.Swagger
     /// For example, if a service serializes/deserializes DateTime as a string when being sent/received, 
     /// there should be a SwaggerTypeMapping from DateTime to string in order to make the swagger output match what is actually expected.
     /// </summary>
-    public class SwaggerTypeMapping
+    public static class SwaggerTypeMapping
     {
-        private static readonly List<SwaggerTypeMapping> TypeMappings = new List<SwaggerTypeMapping>();
-
-        public Type SourceType { get; private set; }
-        public Type TargetType { get; private set;  }
-
-        private SwaggerTypeMapping(Type sourceType, Type targetType)
-        {
-            SourceType = sourceType;
-            TargetType = targetType;
-        }
-
+        private static readonly Dictionary<Type, Type> TypeMappings = new Dictionary<Type, Type>();
+        
         public static void AddTypeMapping(Type source, Type target)
         {
-            TypeMappings.Add(new SwaggerTypeMapping(source, target));
+            TypeMappings[source] = target;
         }
 
         public static bool IsMappedType(Type type)
         {
-            return TypeMappings.Exists(x => x.SourceType == type);
+            return TypeMappings.ContainsKey(type);
         }
 
-        public static Type GetMappedType(Type type, List<Type> previousTypes = null)
+        public static Type GetMappedType(Type type)
         {
-            var returnType = TypeMappings.FirstOrDefault(x => x.SourceType == type)?.TargetType;
+            return GetMappedType(type, new HashSet<Type>());
+        }
+
+        private static Type GetMappedType(Type type, ISet<Type> previousTypes)
+        {
+            if (!TypeMappings.ContainsKey(type))
+                throw new ArgumentException($"Type '{type.FullName}' does not have a mapping.");
+
+            var returnType = TypeMappings[type];
 
             //Check to see if there are any indirect mappings
-            if (IsMappedType(returnType))
-            {
-                if (previousTypes == null)
-                {
-                    previousTypes = new List<Type>();
-                }
+            if (!IsMappedType(returnType))
+                return returnType;
 
-                //Only perform recursion if there is no cycle yet
-                if (!previousTypes.Contains(type))
-                {
-                    previousTypes.Add(type);
-                    returnType = GetMappedType(returnType, previousTypes);
-                }
-            }
+            //Only perform recursion if there is no cycle yet
+            if (previousTypes.Contains(type))
+                return returnType;
 
-            return returnType;
+            previousTypes.Add(type);
+            return GetMappedType(returnType, previousTypes);
         }
     }
 }

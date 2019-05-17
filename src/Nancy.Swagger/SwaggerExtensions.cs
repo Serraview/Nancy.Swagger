@@ -73,20 +73,48 @@ namespace Nancy.Swagger
                     return dataType;
                 }
 
-                dataType.Items = new Item { Ref = SwaggerConfig.ModelIdConvention(itemsType) };
+                dataType.Items = itemsType.ToItem();
 
                 return dataType;
             }
 
             if (isTopLevel)
             {
-                dataType.Ref = SwaggerConfig.ModelIdConvention(type);
+                dataType.Ref = "#/definitions/" + SwaggerBuilderConfig.ModelIdConvention(type);
                 return dataType;
             }
 
-            dataType.Type = SwaggerConfig.ModelIdConvention(type);
+            dataType.Type = SwaggerBuilderConfig.ModelIdConvention(type);
 
             return dataType;
+        }
+
+        public static Item ToItem(this Type type)
+        {
+            var item = new Item();
+            if (type.IsContainer())
+            {
+                item.Type = "array";
+
+                var itemsType = type.GetElementType() ?? type.GetGenericArguments().FirstOrDefault();
+                item.Items = itemsType.ToItem();
+            }
+            else
+            {
+                if (Primitive.IsPrimitive(type))
+                {
+                    var primitive = Primitive.FromType(type);
+
+                    item.Format = primitive.Format;
+                    item.Type = primitive.Type;
+                }
+                else
+                {
+                    item.Ref = "#/definitions/" + SwaggerBuilderConfig.ModelIdConvention(type);
+                }
+            }
+
+            return item;
         }
 
         public static IEnumerable<Model> ToModel(this SwaggerModelData model, IEnumerable<SwaggerModelData> knownModels = null, bool getSubModels = true)
@@ -105,7 +133,7 @@ namespace Nancy.Swagger
 
                     var id = modelDataForClassProperty == null
                         ? swaggerModelPropertyData.Type.Name
-                        : SwaggerConfig.ModelIdConvention(modelDataForClassProperty.ModelType);
+                        : SwaggerBuilderConfig.ModelIdConvention(modelDataForClassProperty.ModelType);
 
                     var description = modelDataForClassProperty == null
                         ? swaggerModelPropertyData.Description
@@ -141,7 +169,7 @@ namespace Nancy.Swagger
 
             var topLevelModel = new Model
             {
-                Id = SwaggerConfig.ModelIdConvention(model.ModelType),
+                Id = SwaggerBuilderConfig.ModelIdConvention(model.ModelType),
                 Description = model.Description,
                 Required = model.Properties
                     .Where(p => p.Required || p.Type.IsImplicitlyRequired())

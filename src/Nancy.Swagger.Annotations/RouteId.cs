@@ -6,7 +6,7 @@ using Swagger.ObjectModel;
 namespace Nancy.Swagger.Annotations
 {
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
-    internal struct RouteId
+    public struct RouteId
     {
         public bool IsValid
         {

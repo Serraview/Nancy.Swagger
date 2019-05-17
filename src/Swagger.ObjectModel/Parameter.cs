@@ -53,5 +53,8 @@ namespace Swagger.ObjectModel
         /// </remarks>
         [SwaggerProperty("required")]
         public bool? Required { get; set; }
+
+        [SwaggerProperty("schema")]
+        public Schema Schema { get; set; }
     }
 }

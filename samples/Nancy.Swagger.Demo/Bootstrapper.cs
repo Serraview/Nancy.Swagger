@@ -1,12 +1,11 @@
 ﻿using Nancy.Conventions;
 using Nancy.Swagger.Services;
 using Swagger.ObjectModel;
+using Nancy.Bootstrapper;
+using Nancy.TinyIoc;
 
 namespace Nancy.Swagger.Demo
 {
-    using Nancy.Bootstrapper;
-    using Nancy.TinyIoc;
-
     public class Bootstrapper : DefaultNancyBootstrapper
     {
         protected override void ApplicationStartup(TinyIoCContainer container, IPipelines pipelines)

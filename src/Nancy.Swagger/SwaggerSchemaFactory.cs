@@ -1,19 +1,21 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using Swagger.ObjectModel;
+using Swagger.ObjectModel.Builders;
 
 namespace Nancy.Swagger
 {
     public static class SwaggerSchemaFactory
     {
-        private const string DefintionsRefLocation = "#/definitions/";
+        private const string DefinitionsRefLocation = "#/definitions/";
 
         public static Schema CreateSchema(this Model sModel, Type t)
         {
-            if (typeof (IEnumerable).IsAssignableFrom(t))
+            if (typeof(IEnumerable).IsAssignableFrom(t))
             {
                 return new EnumerableSchema(t, sModel);
             }
@@ -30,10 +32,12 @@ namespace Nancy.Swagger
             {
                 Type = "array";
                 Items = new Item();
+
                 Type subType = t.GetGenericArguments().FirstOrDefault();
                 Items.Type = "object";
-                Items.Ref = DefintionsRefLocation + subType?.Name;
-                Ref = DefintionsRefLocation + subType?.Name + "[]";
+                
+                Items.Ref = DefinitionsRefLocation + SwaggerBuilderConfig.ModelIdConvention(subType);
+                Ref = DefinitionsRefLocation + SwaggerBuilderConfig.ModelIdConvention(t);
             }
         }
 
@@ -42,7 +46,7 @@ namespace Nancy.Swagger
             public EnumSchema(Type t, Model sModel)
             {
                 Type = "string";
-                Ref = DefintionsRefLocation + t.Name;
+                Ref = DefinitionsRefLocation + SwaggerBuilderConfig.ModelIdConvention(t);
                 Description = sModel.Description;
                 Enum = t.GetEnumNames();
             }
@@ -53,7 +57,7 @@ namespace Nancy.Swagger
             public ObjectSchema(Type t, Model sModel)
             {
                 Type = "object";
-                Ref = DefintionsRefLocation + t.Name;
+                Ref = DefinitionsRefLocation + SwaggerBuilderConfig.ModelIdConvention(t);
                 Required = (sModel.Required as IList<string>)?.Select(x => x.ToCamelCase()).ToList();
                 Description = sModel.Description;
                 Properties = new Dictionary<string, Schema>();
@@ -71,23 +75,31 @@ namespace Nancy.Swagger
 
             if (schema.Type == null)
             {
-                schema.Ref = DefintionsRefLocation + property.Ref;
+                schema.Ref = DefinitionsRefLocation + property.Ref;
             }
             else if (schema.Type.Equals("array"))
             {
-                schema.Items = new Item();
-                if (!string.IsNullOrEmpty(property.Items.Type))
-                {
-                    schema.Items.Type = property.Items.Type;
-                }
-                else
-                {
-                    schema.Items.Type = "object";
-                    schema.Items.Ref = DefintionsRefLocation + property.Items.Ref;
-                }
-
+                schema.Items = CopyItem(property.Items);
             }
             return schema;
+        }
+
+        private static Item CopyItem(Item item)
+        {
+            var copiedItem = new Item();
+            if (!string.IsNullOrEmpty(item.Type))
+            {
+                copiedItem.Type = item.Type;
+                if (item.Items != null)
+                    copiedItem.Items = CopyItem(item.Items);
+            }
+            else
+            {
+                copiedItem.Type = "object";
+                copiedItem.Ref = DefinitionsRefLocation + item.Ref;
+            }
+
+            return copiedItem;
         }
     }
 }
