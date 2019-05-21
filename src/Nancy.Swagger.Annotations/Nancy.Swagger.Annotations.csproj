@@ -46,9 +46,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\etc\CommonAssemblyInfo.cs">
-      <Link>Properties\CommonAssemblyInfo.cs</Link>
-    </Compile>
     <Compile Include="..\Swagger.ObjectModel\ReflectionExtensions.cs">
       <Link>ReflectionExtensions.cs</Link>
     </Compile>
