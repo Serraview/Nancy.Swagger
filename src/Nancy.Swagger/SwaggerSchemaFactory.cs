@@ -75,7 +75,7 @@ namespace Nancy.Swagger
 
             if (schema.Type == null)
             {
-                schema.Ref = DefinitionsRefLocation + property.Ref;
+                schema.Ref = property.Ref;
             }
             else if (schema.Type.Equals("array"))
             {
@@ -96,7 +96,7 @@ namespace Nancy.Swagger
             else
             {
                 copiedItem.Type = "object";
-                copiedItem.Ref = DefinitionsRefLocation + item.Ref;
+                copiedItem.Ref = item.Ref;
             }
 
             return copiedItem;
