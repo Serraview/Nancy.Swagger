@@ -12,6 +12,6 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyCompany("Ciaran Downey and Contributors")]
 [assembly: AssemblyCopyright("Copyright Ciaran Downey 2017")]
 
-[assembly: AssemblyVersion("1.4.3.2")]
-[assembly: AssemblyFileVersion("1.4.3.2")]
-[assembly: AssemblyInformationalVersion("1.4.3.2-sv")]
+[assembly: AssemblyVersion("1.4.3.3")]
+[assembly: AssemblyFileVersion("1.4.3.3")]
+[assembly: AssemblyInformationalVersion("1.4.3.3-sv")]
