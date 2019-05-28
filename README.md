@@ -4,6 +4,13 @@ Nancy plugin for generated API documentation in Swagger format.
 
 The Swagger specification (v2.0) can be found [here](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md).
 
+## Building & Releasing
+
+- Build the project(s) you've made changes to in Release
+- On the command line, navigate to the source folder of the project you're releasing (for example, /src/Nancy.Swagger)
+- Run `nuget pack -IncludeReferencedProjects -Prop Configuration=Release`
+- Upload the resulting .nupkg to http://svdev01:8181/packages
+
 ### NuGet Packages
 
 The code in this repository contains the code for the following NuGet packages:

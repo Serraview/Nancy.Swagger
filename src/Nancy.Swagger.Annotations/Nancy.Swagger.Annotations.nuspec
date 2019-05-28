@@ -13,8 +13,5 @@
     <description>Provides Swagger data by annotating modules and routes.</description>
     <copyright>Copyright © Kristian Hellang 2014</copyright>
     <tags>Nancy Swagger Annotations</tags>
-    <dependencies>
-      <dependency id="Nancy.Swagger" version="$version$" />
-    </dependencies>
   </metadata>
 </package>

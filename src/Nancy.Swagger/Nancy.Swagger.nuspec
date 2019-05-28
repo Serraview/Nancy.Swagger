@@ -13,9 +13,5 @@
     <description>Generated API documentation for Nancy using Swagger.</description>
     <copyright>Copyright © Kristian Hellang 2014</copyright>
     <tags>Nancy Swagger</tags>
-    <dependencies>
-	  <dependency id="Nancy" version="0.23.0" />
-	  <dependency id="Swagger.ObjectModel" version="$version$" />
-    </dependencies>
   </metadata>
 </package>
